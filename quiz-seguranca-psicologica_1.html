@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quiz – Segurança Psicológica | ARH Serrana</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --azul:      #1a3a5c;
+      --azul-med:  #2459a0;
+      --aqua:      #1db5b0;
+      --aqua-lt:   #d4f5f4;
+      --off-white: #f5f7fa;
+      --cinza:     #6b7280;
+      --borda:     #dde3ec;
+      --erro:      #dc2626;
+      --sucesso:   #16a34a;
+      --card-bg:   #ffffff;
+      --radius:    14px;
+      --shadow:    0 4px 24px rgba(26,58,92,.10);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--off-white);
+      min-height: 100vh;
+      color: var(--azul);
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--azul);
+      padding: 18px 32px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.18);
+    }
+    .logo-text {
+      font-family: 'Playfair Display', serif;
+      color: #fff;
+      font-size: 1.45rem;
+      font-weight: 700;
+      letter-spacing: .5px;
+    }
+    .logo-sub {
+      color: var(--aqua);
+      font-family: 'DM Sans', sans-serif;
+      font-size: .75rem;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .logo-divider { width: 2px; height: 36px; background: var(--aqua); opacity: .5; }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, var(--azul) 0%, var(--azul-med) 60%, #1d6fa6 100%);
+      color: #fff;
+      text-align: center;
+      padding: 56px 24px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231db5b0' fill-opacity='0.06'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(29,181,176,.18);
+      border: 1px solid rgba(29,181,176,.4);
+      color: var(--aqua);
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      padding: 5px 16px;
+      border-radius: 100px;
+      margin-bottom: 18px;
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      font-weight: 900;
+      line-height: 1.2;
+      margin-bottom: 14px;
+    }
+    .hero p {
+      font-size: .97rem;
+      color: rgba(255,255,255,.8);
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* ── MAIN WRAPPER ── */
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 16px 60px;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 40px 36px;
+      margin-top: -32px;
+      position: relative;
+    }
+    @media (max-width: 560px) { .card { padding: 28px 20px; } }
+
+    /* ── SCREEN TRANSITIONS ── */
+    .screen { display: none; animation: fadeIn .4s ease; }
+    .screen.active { display: block; }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:none; } }
+
+    /* ── LEAD FORM ── */
+    .form-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .form-subtitle {
+      color: var(--cinza);
+      font-size: .9rem;
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+    .sortio-notice {
+      background: var(--aqua-lt);
+      border-left: 4px solid var(--aqua);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: .85rem;
+      color: var(--azul);
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+    .sortio-notice strong { color: var(--azul-med); }
+
+    .form-row { display: grid; gap: 16px; grid-template-columns: 1fr 1fr; }
+    @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+
+    .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+    .field label { font-size: .82rem; font-weight: 600; color: var(--azul); letter-spacing: .3px; }
+    .field input {
+      border: 1.5px solid var(--borda);
+      border-radius: 8px;
+      padding: 11px 14px;
+      font-size: .95rem;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--azul);
+      background: var(--off-white);
+      transition: border-color .2s, box-shadow .2s;
+      outline: none;
+    }
+    .field input:focus { border-color: var(--aqua); box-shadow: 0 0 0 3px rgba(29,181,176,.15); }
+    .field input.invalid { border-color: var(--erro); }
+    .field-error { font-size: .78rem; color: var(--erro); display: none; }
+    .field.show-error .field-error { display: block; }
+
+    /* ── BUTTON ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--azul-med);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 13px 28px;
+      font-size: .97rem;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: background .2s, transform .15s, box-shadow .2s;
+      width: 100%;
+      margin-top: 8px;
+    }
+    .btn:hover { background: var(--azul); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(26,58,92,.22); }
+    .btn:active { transform: none; }
+    .btn.secondary {
+      background: transparent;
+      border: 2px solid var(--azul-med);
+      color: var(--azul-med);
+      margin-top: 12px;
+    }
+    .btn.secondary:hover { background: var(--azul-med); color: #fff; }
+
+    /* ── PROGRESS ── */
+    .progress-wrap { margin-bottom: 28px; }
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--cinza);
+      margin-bottom: 8px;
+    }
+    .progress-bar {
+      height: 6px;
+      background: var(--borda);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--aqua), var(--azul-med));
+      border-radius: 100px;
+      transition: width .4s ease;
+    }
+
+    /* ── QUESTION ── */
+    .question-num {
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--aqua);
+      margin-bottom: 10px;
+    }
+    .question-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.18rem;
+      font-weight: 700;
+      line-height: 1.45;
+      margin-bottom: 24px;
+      color: var(--azul);
+    }
+
+    /* ── OPTIONS ── */
+    .options { display: flex; flex-direction: column; gap: 12px; }
+    .option {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      border: 2px solid var(--borda);
+      border-radius: 10px;
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: border-color .2s, background .2s, transform .15s;
+      background: var(--off-white);
+    }
+    .option:hover:not(.locked) { border-color: var(--azul-med); background: #eef3fb; transform: translateX(3px); }
+    .option.selected { border-color: var(--azul-med); background: #eef3fb; }
+    .option.locked { cursor: default; pointer-events: none; }
+
+    .opt-letter {
+      min-width: 30px; height: 30px;
+      border-radius: 50%;
+      background: var(--borda);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .8rem; font-weight: 700;
+      color: var(--azul);
+      transition: background .2s, color .2s;
+      flex-shrink: 0;
+    }
+    .option.selected .opt-letter { background: var(--azul-med); color: #fff; }
+
+    .opt-text { font-size: .93rem; line-height: 1.5; color: var(--azul); padding-top: 4px; }
+
+    /* ── NAV ── */
+    .nav-row { display: flex; gap: 12px; margin-top: 28px; }
+    .nav-row .btn { margin-top: 0; }
+
+    /* ── RESULT ── */
+    .result-header { text-align: center; padding-bottom: 28px; border-bottom: 1.5px solid var(--borda); margin-bottom: 28px; }
+    .score-circle {
+      width: 110px; height: 110px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--azul-med), var(--aqua));
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      margin: 0 auto 16px;
+      box-shadow: 0 8px 28px rgba(29,181,176,.35);
+    }
+    .score-num { font-size: 2.1rem; font-weight: 900; color: #fff; line-height: 1; }
+    .score-denom { font-size: .75rem; color: rgba(255,255,255,.75); font-weight: 500; }
+
+    .result-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem; font-weight: 900; margin-bottom: 6px;
+    }
+    .result-msg { font-size: .9rem; color: var(--cinza); line-height: 1.5; }
+
+    /* ── GABARITO ── */
+    .gabarito-title {
+      font-size: .8rem; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--azul-med); margin-bottom: 16px;
+    }
+    .gabarito-item {
+      border-radius: 10px;
+      border: 1.5px solid var(--borda);
+      padding: 14px 16px;
+      margin-bottom: 12px;
+      background: var(--off-white);
+    }
+    .gabarito-item.correct { border-color: var(--sucesso); background: #f0fdf4; }
+    .gabarito-item.wrong { border-color: var(--erro); background: #fef2f2; }
+
+    .gab-q { font-size: .8rem; font-weight: 600; color: var(--cinza); margin-bottom: 5px; }
+    .gab-pergunta { font-size: .88rem; font-weight: 600; color: var(--azul); margin-bottom: 8px; }
+    .gab-line { display: flex; align-items: flex-start; gap: 8px; font-size: .85rem; margin-bottom: 4px; }
+    .gab-icon { font-size: .95rem; flex-shrink: 0; margin-top: 1px; }
+    .gab-label { font-weight: 600; min-width: 60px; color: var(--cinza); }
+    .gab-resp { color: var(--azul); line-height: 1.4; }
+    .gab-line.correta .gab-resp { color: var(--sucesso); font-weight: 600; }
+    .gab-line.errada .gab-resp { color: var(--erro); }
+
+    /* ── LOADING ── */
+    .loading-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(26,58,92,.55);
+      z-index: 999;
+      align-items: center; justify-content: center;
+      flex-direction: column; gap: 16px;
+    }
+    .loading-overlay.show { display: flex; }
+    .spinner {
+      width: 46px; height: 46px;
+      border: 4px solid rgba(255,255,255,.3);
+      border-top-color: var(--aqua);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-overlay p { color: #fff; font-weight: 500; font-size: .95rem; }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed; bottom: 24px; right: 24px;
+      background: var(--azul);
+      color: #fff;
+      padding: 13px 20px;
+      border-radius: 10px;
+      font-size: .88rem;
+      font-weight: 500;
+      box-shadow: 0 6px 24px rgba(0,0,0,.22);
+      transform: translateY(80px);
+      opacity: 0;
+      transition: transform .35s, opacity .35s;
+      z-index: 1000;
+      max-width: 300px;
+    }
+    .toast.show { transform: none; opacity: 1; }
+    .toast.error { background: var(--erro); }
+
+    footer {
+      text-align: center;
+      color: var(--cinza);
+      font-size: .78rem;
+      padding: 20px 16px 40px;
+    }
+    footer a { color: var(--azul-med); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <p>Enviando seus dados…</p>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- HEADER -->
+<header>
+  <div>
+    <div class="logo-text">ARH Serrana</div>
+    <div class="logo-sub">Associação Serrana de RH</div>
+  </div>
+  <div class="logo-divider"></div>
+  <div style="color:rgba(255,255,255,.7);font-size:.85rem;font-weight:500;">Grupo de Estudos</div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">Avaliação de Aprendizado</div>
+  <h1>Quiz: Segurança<br>Psicológica</h1>
+  <p>Teste seu conhecimento sobre Segurança Psicológica, NR-1 e boas práticas em saúde mental no ambiente de trabalho.</p>
+</div>
+
+<!-- MAIN -->
+<main>
+  <div class="card">
+
+    <!-- ══ TELA 1: LEAD ══ -->
+    <div class="screen active" id="screenLead">
+      <div class="form-title">Seus Dados</div>
+      <div class="form-subtitle">Preencha antes de começar o quiz.</div>
+
+      <div class="sortio-notice">
+        🎁 <strong>Participe do sorteio!</strong> Seus dados (nome, e-mail e telefone) serão utilizados exclusivamente para identificar o ganhador de um sorteio realizado entre os participantes do quiz. Nenhuma informação será compartilhada com terceiros.
+      </div>
+
+      <div class="form-row">
+        <div class="field" id="f-nome">
+          <label for="inputNome">Nome *</label>
+          <input type="text" id="inputNome" placeholder="Seu nome"/>
+          <span class="field-error">Campo obrigatório.</span>
+        </div>
+        <div class="field" id="f-sobrenome">
+          <label for="inputSobrenome">Sobrenome *</label>
+          <input type="text" id="inputSobrenome" placeholder="Seu sobrenome"/>
+          <span class="field-error">Campo obrigatório.</span>
+        </div>
+      </div>
+
+      <div class="field" id="f-email">
+        <label for="inputEmail">E-mail *</label>
+        <input type="email" id="inputEmail" placeholder="seuemail@exemplo.com"/>
+        <span class="field-error">Informe um e-mail válido.</span>
+      </div>
+
+      <div class="field" id="f-telefone">
+        <label for="inputTelefone">Telefone / WhatsApp *</label>
+        <input type="tel" id="inputTelefone" placeholder="(00) 00000-0000" maxlength="15"/>
+        <span class="field-error">Campo obrigatório.</span>
+      </div>
+
+      <button class="btn" onclick="iniciarQuiz()">Começar o Quiz →</button>
+    </div>
+
+    <!-- ══ TELA 2: QUIZ ══ -->
+    <div class="screen" id="screenQuiz">
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span id="progressText">Pergunta 1 de 10</span>
+          <span id="progressPct">0%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      </div>
+
+      <div class="question-num" id="questionNum">PERGUNTA 1</div>
+      <div class="question-text" id="questionText"></div>
+
+      <div class="options" id="optionsContainer"></div>
+
+      <div class="nav-row">
+        <button class="btn secondary" id="btnBack" onclick="voltarPergunta()" style="display:none;">← Voltar</button>
+        <button class="btn" id="btnNext" onclick="avancarPergunta()">Próxima →</button>
+      </div>
+    </div>
+
+    <!-- ══ TELA 3: RESULTADO ══ -->
+    <div class="screen" id="screenResult">
+      <div class="result-header">
+        <div class="score-circle">
+          <span class="score-num" id="scoreNum">0</span>
+          <span class="score-denom" id="scoreDenom">de 10</span>
+        </div>
+        <div class="result-title" id="resultTitle">Parabéns!</div>
+        <div class="result-msg" id="resultMsg"></div>
+      </div>
+
+      <div class="gabarito-title">📋 Gabarito Completo</div>
+      <div id="gabaritoContainer"></div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  &copy; 2025 <a href="https://arhserrana.com.br" target="_blank">ARH Serrana</a> – Todos os direitos reservados.
+</footer>
+
+<script>
+// ══════════════════════════════════════════
+//  CONFIGURAÇÃO
+// ══════════════════════════════════════════
+const APPS_SCRIPT_URL = 'COLE_AQUI_A_URL_DO_SEU_WEB_APP'; // ← substitua pela URL do Web App
+
+// ══════════════════════════════════════════
+//  PERGUNTAS
+// ══════════════════════════════════════════
+const perguntas = [
+  {
+    texto: 'Qual o papel essencial do RH na construção da segurança psicológica?',
+    opcoes: [
+      'Garantir segurança, transparência e acolhimento aos colaboradores.',
+      'Focar exclusivamente na contratação e no controle de ponto.',
+      'Evitar o diálogo para não gerar conflitos com a liderança.'
+    ],
+    correta: 0
+  },
+  {
+    texto: 'Qual Norma Regulamentadora é considerada o ponto de partida de todas as NRs e passou a exigir um Inventário de Riscos atualizado?',
+    opcoes: ['NR-12', 'NR-01', 'NR-35'],
+    correta: 1
+  },
+  {
+    texto: 'Qual foi o dado alarmante (recorde histórico) de licenças por saúde mental registrado no Brasil em 2025?',
+    opcoes: ['126.608 licenças', '346.489 licenças', '546.254 licenças'],
+    correta: 2
+  },
+  {
+    texto: 'O que é o "Espaço Acolher" mencionado no grupo de estudos?',
+    opcoes: [
+      'Um ambiente para feedback focado em metas.',
+      'Um ambiente de escuta, acolhimento e apoio emocional voluntário, gratuito e confidencial.',
+      'Um espaço físico terceirizado para atividades físicas na empresa.'
+    ],
+    correta: 1
+  },
+  {
+    texto: 'Por que as ações de saúde mental nas empresas não devem ser baseadas no improviso?',
+    opcoes: [
+      'Porque ações não estruturadas geram cegueira estratégica.',
+      'Porque o RH deve focar apenas na folha de pagamento e não em emoções.',
+      'Porque o improviso incentiva a criatividade desenfreada e perda de foco nas metas.'
+    ],
+    correta: 0
+  },
+  {
+    texto: 'Quais são exemplos de riscos psicossociais que afetam a saúde mental e o desempenho dos colaboradores?',
+    opcoes: [
+      'Fofocas no horário de almoço e atrasos de até 5 minutos no ponto.',
+      'Pressão excessiva, assédio e falta de apoio da liderança.',
+      'Uso excessivo do plano de saúde e falta de EPIs físicos (como capacetes).'
+    ],
+    correta: 1
+  },
+  {
+    texto: 'Onde os colaboradores podem buscar apoio externo para dependência química (Alcoólicos Anônimos) com atendimento 24h?',
+    opcoes: [
+      'Através de clínicas particulares custeadas 100% pela empresa.',
+      'Apenas com agendamento prévio no DHO da empresa.',
+      'Pelo telefone de atendimento 24h (54) 99193-9596.'
+    ],
+    correta: 2
+  },
+  {
+    texto: 'Segundo a NR-1 e as boas práticas, o que é necessário para criar um ambiente de confiança e alta performance?',
+    opcoes: [
+      'Ignorar a saúde mental para focar exclusivamente nos resultados financeiros.',
+      'Ter ações não estruturadas, deixando a saúde mental a cargo do improviso de cada gestor.',
+      'Integrar a saúde mental à rotina, com liderança humanizada, comunicação transparente e canais seguros de denúncia.'
+    ],
+    correta: 2
+  },
+  {
+    texto: 'Como as empresas podem fortalecer um ambiente saudável e uma cultura de cuidado no dia a dia?',
+    opcoes: [
+      'Com ações simples como comemorações, feedbacks positivos, integração e programas de padrinhos.',
+      'Com ações complexas e altos investimentos financeiros em bônus anuais.',
+      'Evitando dar feedbacks para não gerar ansiedade na equipe durante a rotina.'
+    ],
+    correta: 0
+  },
+  {
+    texto: 'Para aprofundar os conhecimentos e entender a base teórica da Segurança Psicológica, quais obras foram indicadas no material?',
+    opcoes: [
+      '"O Monge e o Executivo" (James C. Hunter) e "Quem Pensa Enriquece" (Napoleon Hill).',
+      '"A Organização Sem Medo" (Amy C. Edmondson) e "Os 4 Estágios da Segurança Psicológica" (Timothy R. Clark).',
+      '"Comunicação Não Violenta" (Marshall Rosenberg) e "Mindset" (Carol Dweck).'
+    ],
+    correta: 1
+  }
+];
+
+const letras = ['A', 'B', 'C'];
+
+// ══════════════════════════════════════════
+//  ESTADO
+// ══════════════════════════════════════════
+let lead = {};
+let respostas = new Array(perguntas.length).fill(null);
+let atual = 0;
+
+// ══════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showToast(msg, isError = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (isError ? ' error' : '');
+  setTimeout(() => { t.className = 'toast'; }, 3500);
+}
+
+function phoneMask(v) {
+  v = v.replace(/\D/g, '').slice(0, 11);
+  if (v.length <= 10) return v.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+  return v.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
+}
+
+document.getElementById('inputTelefone').addEventListener('input', function() {
+  this.value = phoneMask(this.value);
+});
+
+// ══════════════════════════════════════════
+//  VALIDAÇÃO LEAD
+// ══════════════════════════════════════════
+function iniciarQuiz() {
+  const nome = document.getElementById('inputNome').value.trim();
+  const sobrenome = document.getElementById('inputSobrenome').value.trim();
+  const email = document.getElementById('inputEmail').value.trim();
+  const telefone = document.getElementById('inputTelefone').value.trim();
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  let ok = true;
+
+  const validar = (fieldId, inputId, cond) => {
+    const f = document.getElementById(fieldId);
+    const i = document.getElementById(inputId);
+    if (!cond) { f.classList.add('show-error'); i.classList.add('invalid'); ok = false; }
+    else { f.classList.remove('show-error'); i.classList.remove('invalid'); }
+  };
+
+  validar('f-nome', 'inputNome', nome.length > 0);
+  validar('f-sobrenome', 'inputSobrenome', sobrenome.length > 0);
+  validar('f-email', 'inputEmail', emailOk);
+  validar('f-telefone', 'inputTelefone', telefone.length >= 13);
+
+  if (!ok) return;
+
+  lead = { nome, sobrenome, email, telefone };
+  respostas = new Array(perguntas.length).fill(null);
+  atual = 0;
+  renderPergunta();
+  showScreen('screenQuiz');
+}
+
+// ══════════════════════════════════════════
+//  QUIZ
+// ══════════════════════════════════════════
+function renderPergunta() {
+  const p = perguntas[atual];
+  const total = perguntas.length;
+  const pct = Math.round((atual / total) * 100);
+
+  document.getElementById('progressText').textContent = `Pergunta ${atual + 1} de ${total}`;
+  document.getElementById('progressPct').textContent = pct + '%';
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('questionNum').textContent = `PERGUNTA ${atual + 1}`;
+  document.getElementById('questionText').textContent = p.texto;
+
+  const container = document.getElementById('optionsContainer');
+  container.innerHTML = '';
+
+  p.opcoes.forEach((op, i) => {
+    const div = document.createElement('div');
+    div.className = 'option' + (respostas[atual] === i ? ' selected' : '');
+    div.innerHTML = `
+      <div class="opt-letter">${letras[i]}</div>
+      <div class="opt-text">${op}</div>`;
+    div.addEventListener('click', () => selecionarOpcao(i));
+    container.appendChild(div);
+  });
+
+  document.getElementById('btnBack').style.display = atual > 0 ? '' : 'none';
+  const btnNext = document.getElementById('btnNext');
+  btnNext.textContent = atual === total - 1 ? 'Finalizar Quiz ✓' : 'Próxima →';
+}
+
+function selecionarOpcao(idx) {
+  respostas[atual] = idx;
+  document.querySelectorAll('.option').forEach((el, i) => {
+    el.classList.toggle('selected', i === idx);
+  });
+}
+
+function avancarPergunta() {
+  if (respostas[atual] === null) {
+    showToast('Selecione uma alternativa antes de continuar.', true);
+    return;
+  }
+  if (atual < perguntas.length - 1) {
+    atual++;
+    renderPergunta();
+    window.scrollTo({ top: document.querySelector('.card').offsetTop - 20, behavior: 'smooth' });
+  } else {
+    finalizarQuiz();
+  }
+}
+
+function voltarPergunta() {
+  if (atual > 0) { atual--; renderPergunta(); }
+}
+
+// ══════════════════════════════════════════
+//  FINALIZAR
+// ══════════════════════════════════════════
+async function finalizarQuiz() {
+  const score = respostas.reduce((acc, r, i) => acc + (r === perguntas[i].correta ? 1 : 0), 0);
+
+  // Montar gabarito
+  const gabContainer = document.getElementById('gabaritoContainer');
+  gabContainer.innerHTML = '';
+  perguntas.forEach((p, i) => {
+    const userIdx = respostas[i];
+    const acertou = userIdx === p.correta;
+    const item = document.createElement('div');
+    item.className = `gabarito-item ${acertou ? 'correct' : 'wrong'}`;
+    item.innerHTML = `
+      <div class="gab-q">PERGUNTA ${i + 1} — ${acertou ? '✅ ACERTOU' : '❌ ERROU'}</div>
+      <div class="gab-pergunta">${p.texto}</div>
+      <div class="gab-line ${acertou ? '' : 'errada'}">
+        <span class="gab-icon">${acertou ? '' : '✗'}</span>
+        <span class="gab-label">Sua resposta:</span>
+        <span class="gab-resp">${p.opcoes[userIdx]}</span>
+      </div>
+      ${!acertou ? `<div class="gab-line correta">
+        <span class="gab-icon">✓</span>
+        <span class="gab-label">Correta:</span>
+        <span class="gab-resp">${p.opcoes[p.correta]}</span>
+      </div>` : ''}`;
+    gabContainer.appendChild(item);
+  });
+
+  // Mensagem de resultado
+  document.getElementById('scoreNum').textContent = score;
+  document.getElementById('scoreDenom').textContent = `de ${perguntas.length}`;
+  let titulo, msg;
+  if (score === 10) { titulo = 'Perfeito! 🏆'; msg = 'Você acertou todas as questões. Excelente domínio do tema!'; }
+  else if (score >= 8) { titulo = 'Muito bem! 🌟'; msg = `Você acertou ${score} de 10. Ótimo desempenho!`; }
+  else if (score >= 6) { titulo = 'Bom resultado! 👍'; msg = `Você acertou ${score} de 10. Continue aprendendo sobre Segurança Psicológica.`; }
+  else { titulo = 'Vamos juntos! 💪'; msg = `Você acertou ${score} de 10. Revise o material e tente novamente em breve.`; }
+  document.getElementById('resultTitle').textContent = titulo;
+  document.getElementById('resultMsg').textContent = msg;
+
+  showScreen('screenResult');
+
+  // Enviar para Google Sheets
+  await enviarDados(score);
+}
+
+// ══════════════════════════════════════════
+//  INTEGRAÇÃO GOOGLE SHEETS
+// ══════════════════════════════════════════
+async function enviarDados(score) {
+  if (APPS_SCRIPT_URL === 'COLE_AQUI_A_URL_DO_SEU_WEB_APP') {
+    console.warn('URL do Web App não configurada.');
+    return;
+  }
+
+  const overlay = document.getElementById('loadingOverlay');
+  overlay.classList.add('show');
+
+  const payload = {
+    nome: lead.nome,
+    sobrenome: lead.sobrenome,
+    email: lead.email,
+    telefone: lead.telefone,
+    pontuacao: score
+  };
+
+  try {
+    await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    showToast('Dados registrados com sucesso! ✓');
+  } catch (err) {
+    console.error('Erro ao enviar dados:', err);
+    showToast('Não foi possível registrar os dados. Verifique a URL do Web App.', true);
+  } finally {
+    overlay.classList.remove('show');
+  }
+}
+</script>
+</body>
+</html>
