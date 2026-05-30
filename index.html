@@ -480,7 +480,7 @@
 // ══════════════════════════════════════════
 //  CONFIGURAÇÃO
 // ══════════════════════════════════════════
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzLmjZ411Vpe1nmG-Iaxj_ycuC4wv00NXTQGy-3c1ClRAWUqqWW1Qimbqdhig4ZCufyaw/exec'; // ← substitua pela URL do Web App
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzLmjZ411Vpe1nmG-Iaxj_ycuC4wv00NXTQGy-3c1ClRAWUqqWW1Qimbqdhig4ZCufyaw/exec'; // ← substitua pela URL do Web App
 
 // ══════════════════════════════════════════
 //  PERGUNTAS
@@ -746,7 +746,7 @@ async function finalizarQuiz() {
 //  INTEGRAÇÃO GOOGLE SHEETS
 // ══════════════════════════════════════════
 async function enviarDados(score) {
-  if (APPS_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbzLmjZ411Vpe1nmG-Iaxj_ycuC4wv00NXTQGy-3c1ClRAWUqqWW1Qimbqdhig4ZCufyaw/exec') {
+  if (SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbzLmjZ411Vpe1nmG-Iaxj_ycuC4wv00NXTQGy-3c1ClRAWUqqWW1Qimbqdhig4ZCufyaw/exec') {
     console.warn('URL do Web App não configurada.');
     return;
   }
@@ -763,7 +763,7 @@ async function enviarDados(score) {
   };
 
   try {
-    await fetch(APPS_SCRIPT_URL, {
+    await fetch(SCRIPT_URL, {
       method: 'POST',
       mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
